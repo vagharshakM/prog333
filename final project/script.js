@@ -1,41 +1,11 @@
-let io = io();
+var socket = io();
 
+var side = 10;
 
-var grassArr = []
-var grassEaterArr = []
-var predatorArr = []
-var napoArr = []
-var napoEaterArr = []
 function setup() {
     frameRate(5);
-    createCanvas(matrix[0].length * side, matrix.length * side);
+    createCanvas(matrix.length * side, matrix.length * side);
     background('#acacac');
-    for (var y = 0; y < matrix.length; ++y) {
-        for (var x = 0; x < matrix[y].length; ++x) {
-            if (matrix[y][x] == 1) {
-                var gr = new Grass(x, y, 1);
-                grassArr.push(gr);
-
-            }
-            else if (matrix[y][x] == 2) {
-                var gr = new GrassEater(x, y, 1)
-                grassEaterArr.push(gr);
-            }
-            else if (matrix[y][x] == 3) {
-                var gr = new Predator(x, y, 1)
-                predatorArr.push(gr);
-            }
-            else if (matrix[y][x] == 4) {
-                var gr = new Napo(x, y, 1)
-                napoArr.push(gr);
-            }
-            else if (matrix[y][x] == 5) {
-                var gr = new NapoEater(x, y, 1)
-                napoEaterArr.push(gr);
-            }
-        }
-    }
-
 }
 function draw() {
 
@@ -68,23 +38,10 @@ function draw() {
             }
         }
     }
-    for (var i in grassArr) {
-        grassArr[i].mul();
-    }
-    for (let j in grassEaterArr) {
-        grassEaterArr[j].mul()
-        grassEaterArr[j].eat()
-    }
-    for (let j in predatorArr) {
-        predatorArr[j].mul()
-        predatorArr[j].eat()
-    }
-    for (var i in napoArr) {
-        napoArr[i].mul();
-        napoArr[i].eat();
-    }
-    for (var j in napoEaterArr) {
-        napoEaterArr[j].mul()
-        napoEaterArr[j].eat()
-    }
+    
+}
+socket.on('send matrix', draw)
+
+function kill() {
+    socket.emit("kill")
 }
