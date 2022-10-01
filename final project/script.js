@@ -3,11 +3,11 @@ var socket = io();
 var side = 10;
 
 function setup() {
-    frameRate(5);
-    createCanvas(matrix.length * side, matrix.length * side);
+
+    createCanvas(40* side, 40 * side);
     background('#acacac');
 }
-function draw() {
+function nkarel(matrix) {
 
     for (var y = 0; y < matrix.length; y++) {
         for (var x = 0; x < matrix[y].length; x++) {
@@ -40,8 +40,23 @@ function draw() {
     }
     
 }
-socket.on('send matrix', draw)
+socket.on('send matrix', nkarel)
 
 function kill() {
     socket.emit("kill")
+}
+function addGrass() {
+    socket.emit("add grass")
+}
+function addGrassEater() {
+    socket.emit("add grassEater")
+}
+function addPredator() {
+    socket.emit("add predator")
+}
+function addNapo() {
+    socket.emit("add napo")
+}
+function addNapoEater() {
+    socket.emit("add napoEater")
 }
