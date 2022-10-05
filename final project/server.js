@@ -4,7 +4,6 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 var fs = require("fs");
-const Grass = require('./grass');
 
 app.use(express.static("."));
 
@@ -18,6 +17,8 @@ server.listen(3000);
  matrix = []
 
 var n = 40;
+
+
 
 function rand(min, max) {
     return Math.random() * (max - min) + min;
@@ -40,7 +41,7 @@ predatorArr = []
 napoArr = []
 napoEaterArr = []
 
-
+weath = "winter";
 grass = require("./grass");
 grassEater = require("./grassEater");
 predator = require("./predator");
@@ -57,19 +58,19 @@ function createObject() {
 
             }
             else if (matrix[y][x] == 2) {
-                var gr = new grassEater(x, y, 1)
+                var gr = new grassEater(x, y, 2)
                 grassEaterArr.push(gr);
             }
             else if (matrix[y][x] == 3) {
-                var gr = new predator(x, y, 1)
+                var gr = new predator(x, y, 3)
                 predatorArr.push(gr);
             }
             else if (matrix[y][x] == 4) {
-                var gr = new napo(x, y, 1)
+                var gr = new napo(x, y, 4)
                 napoArr.push(gr);
             }
             else if (matrix[y][x] == 5) {
-                var gr = new napoEater(x, y, 1)
+                var gr = new napoEater(x, y, 5)
                 napoEaterArr.push(gr);
             }
         }
@@ -118,12 +119,12 @@ function kill() {
 }
 
 function addGrass() {
-    for (var i = 0; i < 7; i++) {
+    for (var i = 0; i < 5; i++) {
     var x = Math.floor(Math.random() * matrix[0].length)
     var y = Math.floor(Math.random() * matrix.length)
         if (matrix[y][x] == 0) {
             matrix[y][x] = 1
-            var gr = new Grass(x, y, 1)
+            var gr = new grass(x, y, 1)
             grassArr.push(gr)
         }
     }
@@ -178,6 +179,22 @@ function addNapoEater() {
     io.sockets.emit("send matrix", matrix);
 }
 
+function weather() {
+    if (weath == "winter") {
+        weath = "spring"
+    }
+    else if (weath == "spring") {
+        weath = "summer"
+    }
+    else if (weath == "summer") {
+        weath = "autumn"
+    }
+    else if (weath == "autumn") {
+        weath = "winter"
+    }
+    io.sockets.emit('weather', weath)
+}
+setInterval(weather, 5000);
 
 io.on('connection', function (socket) {
     createObject();
